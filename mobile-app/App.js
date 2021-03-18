@@ -5,31 +5,18 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Moment from 'react-moment';
 import 'moment-timezone';
-import GetLocation from 'react-native-get-location'
-import { Location, Permissions } from 'expo'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 
 export default function App() {
 
-  const [errorMsg, setErrorMsg] = useState('')
-  const [userLocation, setUserLocation] = useState('')
-
-  let getLocation = async () => {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      console.log('Not granted')
-      setErrorMsg('Permission not granted')
-    }
-  }
-
-  const userLocation = Location.getCurrentPosition()
-
-  setUserLocation(userLocation)
-
-
-  const API_KEY = "16909a97489bed275d13dbdea4e01f59"
+  const API_KEY = "24e49451407f68c8cdcfe00f88494089"
   const [city, setCity] = useState('Barcelona')
   const [weekList, setWeekList] = useState([])
+  const [location, setLocation] = useState({
+    userLat: '',
+    userLng: ''
+  })
   const [weatherData, setWeatherData] = useState({
     weekDays: '',
     temp: '',
@@ -45,28 +32,62 @@ export default function App() {
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
 
-  GetLocation.getCurrentPosition({
-    enableHighAccuracy: true,
-    timeout: 15000,
-  })
-    .then(location => {
-      console.log(location);
-    })
-    .catch(error => {
-      const { code, message } = error;
-      console.warn(code, message);
-    })
+  ///GET LOCATION///
+  let getCoordinates = () => {
+    let options = {
+      enableHighAccuracy: true,//to receive the best possible results
+      timeout: 10000,//max waiting time
+    };
+    let success = (pos) => {
+      let crd = pos.coords;
+      let lat = crd.latitude.toString();
+      let lng = crd.longitude.toString();
 
-  let findWeatherData = (city) => {
-    let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&cnt=7&appid=${API_KEY}`
-    axios.get(forecastUrl)
+      setLocation({
+        userLat: lat,
+        userLng: lng
+      })
+
+      console.log(`Latitude: ${lat}, Longitude: ${lng}`)
+      //getCity(coordinates);
+    }
+    let error = (err) => {
+      console.warn(`ERROR(${err.code}): ${err.message}`);
+    }
+    navigator.geolocation.getCurrentPosition(success, error, options);
+
+
+
+    let forecastByCoordUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${location.userLat}&lon=${location.userLng}&appid=${API_KEY}`
+    axios.get(forecastByCoordUrl)
       .then((res) => {
-        console.log(res.data)
+        console.log(res)
+        /*setCity(res.data.city.name)
         setWeekList(res.data.list)
         setWeatherData({
           ...weatherData,
           cityDisplay: res.data.city.name,
           temp: (res.data.list[0].temp.day - 273.15).toFixed(0) + "°",
+          maindescr: res.data.list[0].weather[0].main,
+          weekDay: res.data.list[0].dt * 1000
+        })*/
+      })
+      .catch((error) => {
+        console.log(error.message)
+      })
+  }
+  console.log(location.userLat)
+  ///GET WEATHER DATA///
+  let findWeatherData = (city) => {
+    let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}`
+    axios.get(forecastUrl)
+      .then((res) => {
+        console.log(res)
+        setWeekList(res.data.list)
+        setWeatherData({
+          ...weatherData,
+          cityDisplay: res.data.city.name,
+          temp: (res.data.list[0].main.temp - 273.15).toFixed(0) + "°",
           maindescr: res.data.list[0].weather[0].main,
           weekDay: res.data.list[0].dt * 1000
         })
@@ -81,32 +102,33 @@ export default function App() {
 
   let renderDayLines = () => (
     weekList.map((day, idx) => {
-      return <View key={idx} style={styles.weather_line_week}>
-        <View style={styles.weather_line_city}>
+      if (idx < 7) {
+        return <View key={idx} style={styles.weather_line_week}>
+          <View style={styles.weather_line_city}>
 
-          <Text style={styles.forecast_text}>{new Date(day.dt * 1000).toLocaleString("en-us", { weekday: "long" })}</Text>
+            <Text style={styles.forecast_text}>{new Date(day.dt * 1000).toLocaleString("en-us", { weekday: "long" })}</Text>
+          </View>
+          <View style={styles.weather_line_icon}>
+            <Image style={styles.weather_Img} source={{ uri: `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png` }} />
+          </View>
+          <View style={styles.weather_line_temp}>
+            <Text style={styles.forecast_text}>{(day.main.temp_max - 273.15).toFixed(0) + "°"}</Text>
+            <Text style={styles.forecast_text}>{(day.main.temp_min - 273.15).toFixed(0) + "°"}</Text>
+          </View>
         </View>
-        <View style={styles.weather_line_icon}>
-          <Image style={styles.weather_Img} source={{ uri: `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png` }} />
-        </View>
-        <View style={styles.weather_line_temp}>
-          <Text style={styles.forecast_text}>{(day.temp.max - 273.15).toFixed(0) + "°"}</Text>
-          <Text style={styles.forecast_text}>{(day.temp.min - 273.15).toFixed(0) + "°"}</Text>
-        </View>
-      </View>
+      }
+      else { null }
     })
   )
 
   // new Date(day.dt * 1000).toLocaleString("en-us", { weekday: "long" })
 
   useEffect(() => {
-    findWeatherData(city)
-    getLocation()
+    getCoordinates()
   }, [])
 
   return (
-    <>
-
+    <>//googleKey: AIzaSyDafc8vzGS609_owzrF2WNRLumYjiY4Gjg
       <ImageBackground
         source={{ uri: 'https://images.unsplash.com/photo-1602102245142-a0a02e7a6b05?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjAwfHxibHVlJTIwc2t5fGVufDB8MXwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }}
         style={styles.Image_Background}
