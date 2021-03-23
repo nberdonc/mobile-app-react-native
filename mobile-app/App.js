@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import { StyleSheet, Text, View, TextInput, useWindowDimensions, Image, ImageBackground, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, useWindowDimensions, Image, ImageBackground, TouchableOpacity, ScrollView, SafeAreaView, LocationItem } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Moment from 'react-moment';
 import 'moment-timezone';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
+
 
 
 
@@ -58,7 +59,7 @@ export default function App() {
     navigator.geolocation.getCurrentPosition(success, error, options);
   }
   ///GET LOCATION WEATHER DATA///
-  console.log(location.userLat)
+  //console.log(location.userLat)
   let displayLocationWeather = (lat, lng) => {
     let forecastByCoordUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lng}&cnt=7&appid=${WeatherAPI_KEY}`
     axios.get(forecastByCoordUrl)
@@ -99,7 +100,7 @@ export default function App() {
         console.log(error.message)
       })
   }
-  console.log(weatherData.weekDay)
+  //console.log(weatherData.weekDay)
 
   let renderDayLines = () => (
     weekList.map((day, idx) => {
@@ -121,26 +122,6 @@ export default function App() {
     })
   )
 
-  ///AUTOCOMPLETE WITH AXIOS/////
-  /*let searchLocation = async (text) => {
-    setSearchResults({ searchKeyword: text });
-    axios.request({
-      method: 'post',
-      url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${AIzaSyDafc8vzGS609_owzrF2WNRLumYjiY4Gjg}&input=${searchResults.searchKeyword}`,
-    })
-      .then((response) => {
-        console.log(response.data);
-        setSearchResults({
-          searchResults: response.data.predictions,
-          isShowingResults: true,
-        });
-      })
-      .catch((e) => {
-        console.log(e.response);
-      });
-  };*/
-
-
   useEffect(() => {
     //getCoordinates()
   }, [])
@@ -152,18 +133,8 @@ export default function App() {
         source={{ uri: 'https://images.unsplash.com/photo-1602102245142-a0a02e7a6b05?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjAwfHxibHVlJTIwc2t5fGVufDB8MXwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }}
         style={styles.Image_Background}
       >
-        {///AUTOCOMPLETE WITH AXIOS/////
-        /*<SafeAreaView style={styles.container}>
-          <TextInput
-            placeholder="Search for an address"
-            placeholderTextColor="#000"
-            style={styles.searchBox}
-            onChangeText={(text) => searchLocation(text)}
-            value={searchResults.searchKeyword}
-          />
-        </SafeAreaView>*/}
-        <GoogleAutoComplete apiKey={API_KEY}>
-          {({ handleTextChange, locationResults, fetchDetails }) => (
+        <GoogleAutoComplete apiKey={API_KEY} components="country:es">
+          {({ inputValue, handleTextChange, locationResults, fetchDetails }) => (
             <React.Fragment>
               {console.log('locationResults', locationResults)}
               <TextInput
@@ -173,7 +144,7 @@ export default function App() {
                   borderWidth: 1,
                   paddingHorizontal: 16,
                 }}
-
+                value={inputValue}
                 onChangeText={handleTextChange}
                 placeholder="Location..."
               />
