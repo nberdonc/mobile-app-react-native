@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import { StyleSheet, Text, View, TextInput, useWindowDimensions, Image, ImageBackground, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, useWindowDimensions, Image, ImageBackground, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Moment from 'react-moment';
 import 'moment-timezone';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { GoogleAutoComplete } from 'react-native-google-autocomplete';
+
 
 
 export default function App() {
 
-  const API_KEY = "24e49451407f68c8cdcfe00f88494089"
+  const API_KEY = "16909a97489bed275d13dbdea4e01f59"
   const [city, setCity] = useState('Barcelona')
   const [weekList, setWeekList] = useState([])
   const [location, setLocation] = useState({
@@ -28,7 +29,6 @@ export default function App() {
     maindescr: '',
     weekDay: '',
   })
-
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
 
@@ -49,20 +49,21 @@ export default function App() {
       })
 
       console.log(`Latitude: ${lat}, Longitude: ${lng}`)
-      //getCity(coordinates);
+      displayLocationWeather(lat, lng)
     }
     let error = (err) => {
       console.warn(`ERROR(${err.code}): ${err.message}`);
     }
     navigator.geolocation.getCurrentPosition(success, error, options);
-
-
-
-    let forecastByCoordUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${location.userLat}&lon=${location.userLng}&appid=${API_KEY}`
+  }
+  ///GET LOCATION WEATHER DATA///
+  console.log(location.userLat)
+  let displayLocationWeather = (lat, lng) => {
+    let forecastByCoordUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lng}&cnt=7&appid=${API_KEY}`
     axios.get(forecastByCoordUrl)
       .then((res) => {
         console.log(res)
-        /*setCity(res.data.city.name)
+        setCity(res.data.city.name)
         setWeekList(res.data.list)
         setWeatherData({
           ...weatherData,
@@ -70,16 +71,17 @@ export default function App() {
           temp: (res.data.list[0].temp.day - 273.15).toFixed(0) + "°",
           maindescr: res.data.list[0].weather[0].main,
           weekDay: res.data.list[0].dt * 1000
-        })*/
+        })
       })
       .catch((error) => {
         console.log(error.message)
       })
   }
-  console.log(location.userLat)
+
+
   ///GET WEATHER DATA///
   let findWeatherData = (city) => {
-    let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}`
+    let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&cnt=7&appid=${API_KEY}`
     axios.get(forecastUrl)
       .then((res) => {
         console.log(res)
@@ -87,7 +89,7 @@ export default function App() {
         setWeatherData({
           ...weatherData,
           cityDisplay: res.data.city.name,
-          temp: (res.data.list[0].main.temp - 273.15).toFixed(0) + "°",
+          temp: (res.data.list[0].temp.day - 273.15).toFixed(0) + "°",
           maindescr: res.data.list[0].weather[0].main,
           weekDay: res.data.list[0].dt * 1000
         })
@@ -105,15 +107,14 @@ export default function App() {
       if (idx < 7) {
         return <View key={idx} style={styles.weather_line_week}>
           <View style={styles.weather_line_city}>
-
             <Text style={styles.forecast_text}>{new Date(day.dt * 1000).toLocaleString("en-us", { weekday: "long" })}</Text>
           </View>
           <View style={styles.weather_line_icon}>
             <Image style={styles.weather_Img} source={{ uri: `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png` }} />
           </View>
           <View style={styles.weather_line_temp}>
-            <Text style={styles.forecast_text}>{(day.main.temp_max - 273.15).toFixed(0) + "°"}</Text>
-            <Text style={styles.forecast_text}>{(day.main.temp_min - 273.15).toFixed(0) + "°"}</Text>
+            <Text style={styles.forecast_text}>{(day.temp.max - 273.15).toFixed(0) + "°"}</Text>
+            <Text style={styles.forecast_text}>{(day.temp.min - 273.15).toFixed(0) + "°"}</Text>
           </View>
         </View>
       }
@@ -121,18 +122,73 @@ export default function App() {
     })
   )
 
+  /*let searchLocation = async (text) => {
+    setSearchResults({ searchKeyword: text });
+    axios.request({
+      method: 'post',
+      url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${AIzaSyDafc8vzGS609_owzrF2WNRLumYjiY4Gjg}&input=${searchResults.searchKeyword}`,
+    })
+      .then((response) => {
+        console.log(response.data);
+        setSearchResults({
+          searchResults: response.data.predictions,
+          isShowingResults: true,
+        });
+      })
+      .catch((e) => {
+        console.log(e.response);
+      });
+  };*/
+
   // new Date(day.dt * 1000).toLocaleString("en-us", { weekday: "long" })
 
   useEffect(() => {
-    getCoordinates()
+    //getCoordinates()
   }, [])
-
+  //googleKey autocomplete: AIzaSyDafc8vzGS609_owzrF2WNRLumYjiY4Gjg
+  /*<SafeAreaView style={styles.container}>
+          <TextInput
+            placeholder="Search for an address"
+            placeholderTextColor="#000"
+            style={styles.searchBox}
+            onChangeText={(text) => searchLocation(text)}
+            value={searchResults.searchKeyword}
+          />
+        </SafeAreaView>*/
   return (
-    <>//googleKey: AIzaSyDafc8vzGS609_owzrF2WNRLumYjiY4Gjg
+    <>
       <ImageBackground
         source={{ uri: 'https://images.unsplash.com/photo-1602102245142-a0a02e7a6b05?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjAwfHxibHVlJTIwc2t5fGVufDB8MXwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }}
         style={styles.Image_Background}
       >
+        <GoogleAutoComplete apiKey="AIzaSyDafc8vzGS609_owzrF2WNRLumYjiY4Gjg">
+          {({ handleTextChange, locationResults, fetchDetails }) => (
+            <React.Fragment>
+              {console.log('locationResults', locationResults)}
+              <TextInput
+                style={{
+                  height: 40,
+                  width: 300,
+                  borderWidth: 1,
+                  paddingHorizontal: 16,
+                }}
+
+                onChangeText={handleTextChange}
+                placeholder="Location..."
+              />
+              <ScrollView style={{ maxHeight: 100 }}>
+                {locationResults.map((el, i) => (
+                  <LocationItem
+                    {...el}
+                    fetchDetails={fetchDetails}
+                    key={String(i)}
+                  />
+                ))}
+              </ScrollView>
+            </React.Fragment>
+          )}
+        </GoogleAutoComplete>
+
         <View style={styles.input_box_view}>
           <TextInput
             placeholder='Search'
@@ -142,9 +198,9 @@ export default function App() {
           />
           <TouchableOpacity style={styles.search_btn}>
             <Icon name='search1' size={24} color='#fff'
-              onPress={() => {
+              /*onPress={() => {
                 findWeatherData(city);
-              }} />
+              }}*/ />
           </TouchableOpacity>
         </View>
 
@@ -157,7 +213,7 @@ export default function App() {
         </View>
         <View style={styles.weather_box_week}>
           <View style={styles.weather_holder_week}>
-            {renderDayLines()}
+            {/*renderDayLines()*/}
           </View>
         </View>
       </ImageBackground>
