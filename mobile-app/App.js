@@ -11,7 +11,8 @@ import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 
 export default function App() {
 
-  const API_KEY = "16909a97489bed275d13dbdea4e01f59"
+  const API_KEY = "AIzaSyDafc8vzGS609_owzrF2WNRLumYjiY4Gjg"
+  const WeatherAPI_KEY = "16909a97489bed275d13dbdea4e01f59"
   const [city, setCity] = useState('Barcelona')
   const [weekList, setWeekList] = useState([])
   const [location, setLocation] = useState({
@@ -49,7 +50,7 @@ export default function App() {
       })
 
       console.log(`Latitude: ${lat}, Longitude: ${lng}`)
-      displayLocationWeather(lat, lng)
+      //displayLocationWeather(lat, lng)
     }
     let error = (err) => {
       console.warn(`ERROR(${err.code}): ${err.message}`);
@@ -59,7 +60,7 @@ export default function App() {
   ///GET LOCATION WEATHER DATA///
   console.log(location.userLat)
   let displayLocationWeather = (lat, lng) => {
-    let forecastByCoordUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lng}&cnt=7&appid=${API_KEY}`
+    let forecastByCoordUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lng}&cnt=7&appid=${WeatherAPI_KEY}`
     axios.get(forecastByCoordUrl)
       .then((res) => {
         console.log(res)
@@ -81,7 +82,7 @@ export default function App() {
 
   ///GET WEATHER DATA///
   let findWeatherData = (city) => {
-    let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&cnt=7&appid=${API_KEY}`
+    let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&cnt=7&appid=${WeatherAPI_KEY}`
     axios.get(forecastUrl)
       .then((res) => {
         console.log(res)
@@ -98,9 +99,7 @@ export default function App() {
         console.log(error.message)
       })
   }
-  //var weekDayName = moment(1616065200).format('dddd');
   console.log(weatherData.weekDay)
-  //console.log(weekDayName)   
 
   let renderDayLines = () => (
     weekList.map((day, idx) => {
@@ -122,6 +121,7 @@ export default function App() {
     })
   )
 
+  ///AUTOCOMPLETE WITH AXIOS/////
   /*let searchLocation = async (text) => {
     setSearchResults({ searchKeyword: text });
     axios.request({
@@ -140,13 +140,20 @@ export default function App() {
       });
   };*/
 
-  // new Date(day.dt * 1000).toLocaleString("en-us", { weekday: "long" })
 
   useEffect(() => {
     //getCoordinates()
   }, [])
-  //googleKey autocomplete: AIzaSyDafc8vzGS609_owzrF2WNRLumYjiY4Gjg
-  /*<SafeAreaView style={styles.container}>
+
+
+  return (
+    <>
+      <ImageBackground
+        source={{ uri: 'https://images.unsplash.com/photo-1602102245142-a0a02e7a6b05?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjAwfHxibHVlJTIwc2t5fGVufDB8MXwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }}
+        style={styles.Image_Background}
+      >
+        {///AUTOCOMPLETE WITH AXIOS/////
+        /*<SafeAreaView style={styles.container}>
           <TextInput
             placeholder="Search for an address"
             placeholderTextColor="#000"
@@ -154,14 +161,8 @@ export default function App() {
             onChangeText={(text) => searchLocation(text)}
             value={searchResults.searchKeyword}
           />
-        </SafeAreaView>*/
-  return (
-    <>
-      <ImageBackground
-        source={{ uri: 'https://images.unsplash.com/photo-1602102245142-a0a02e7a6b05?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjAwfHxibHVlJTIwc2t5fGVufDB8MXwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }}
-        style={styles.Image_Background}
-      >
-        <GoogleAutoComplete apiKey="AIzaSyDafc8vzGS609_owzrF2WNRLumYjiY4Gjg">
+        </SafeAreaView>*/}
+        <GoogleAutoComplete apiKey={API_KEY}>
           {({ handleTextChange, locationResults, fetchDetails }) => (
             <React.Fragment>
               {console.log('locationResults', locationResults)}
