@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import { StyleSheet, Text, View, TextInput, useWindowDimensions, Image, ImageBackground, TouchableOpacity, ScrollView, SafeAreaView, LocationItem } from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Moment from 'react-moment';
 import 'moment-timezone';
-import { GoogleAutoComplete } from 'react-native-google-autocomplete';
-
-
-
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export default function App() {
 
@@ -31,8 +26,6 @@ export default function App() {
     maindescr: '',
     weekDay: '',
   })
-  const windowWidth = useWindowDimensions().width;
-  const windowHeight = useWindowDimensions().height;
 
   ///GET LOCATION///
   let getCoordinates = () => {
@@ -51,7 +44,7 @@ export default function App() {
       })
 
       console.log(`Latitude: ${lat}, Longitude: ${lng}`)
-      //displayLocationWeather(lat, lng)
+      displayLocationWeather(lat, lng)
     }
     let error = (err) => {
       console.warn(`ERROR(${err.code}): ${err.message}`);
@@ -59,7 +52,7 @@ export default function App() {
     navigator.geolocation.getCurrentPosition(success, error, options);
   }
   ///GET LOCATION WEATHER DATA///
-  //console.log(location.userLat)
+  console.log(location.userLat)
   let displayLocationWeather = (lat, lng) => {
     let forecastByCoordUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lng}&cnt=7&appid=${WeatherAPI_KEY}`
     axios.get(forecastByCoordUrl)
@@ -80,7 +73,6 @@ export default function App() {
       })
   }
 
-
   ///GET WEATHER DATA///
   let findWeatherData = (city) => {
     let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&cnt=7&appid=${WeatherAPI_KEY}`
@@ -100,14 +92,14 @@ export default function App() {
         console.log(error.message)
       })
   }
-  //console.log(weatherData.weekDay)
+  console.log(weatherData.weekDay)
 
   let renderDayLines = () => (
     weekList.map((day, idx) => {
       if (idx < 7) {
         return <View key={idx} style={styles.weather_line_week}>
           <View style={styles.weather_line_city}>
-            <Text style={styles.forecast_text}>{new Date(day.dt * 1000).toLocaleString("en-us", { weekday: "long" })}</Text>
+            <Text style={styles.forecast_text}>{new Date(day.dt * 1000).toString().split(' ')[0]}</Text>
           </View>
           <View style={styles.weather_line_icon}>
             <Image style={styles.weather_Img} source={{ uri: `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png` }} />
@@ -123,9 +115,8 @@ export default function App() {
   )
 
   useEffect(() => {
-    //getCoordinates()
+    getCoordinates()
   }, [])
-
 
   return (
     <>
@@ -133,46 +124,29 @@ export default function App() {
         source={{ uri: 'https://images.unsplash.com/photo-1602102245142-a0a02e7a6b05?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjAwfHxibHVlJTIwc2t5fGVufDB8MXwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }}
         style={styles.Image_Background}
       >
-        <GoogleAutoComplete apiKey={API_KEY} components="country:es">
-          {({ inputValue, handleTextChange, locationResults, fetchDetails }) => (
-            <React.Fragment>
-              {console.log('locationResults', locationResults)}
-              <TextInput
-                style={{
-                  height: 40,
-                  width: 300,
-                  borderWidth: 1,
-                  paddingHorizontal: 16,
-                }}
-                value={inputValue}
-                onChangeText={handleTextChange}
-                placeholder="Location..."
-              />
-              <ScrollView style={{ maxHeight: 100 }}>
-                {locationResults.map((el, i) => (
-                  <LocationItem
-                    {...el}
-                    fetchDetails={fetchDetails}
-                    key={String(i)}
-                  />
-                ))}
-              </ScrollView>
-            </React.Fragment>
-          )}
-        </GoogleAutoComplete>
-
         <View style={styles.input_box_view}>
-          <TextInput
+          <GooglePlacesAutocomplete
             placeholder='Search'
             placeholderTextcolor='#fff'
             style={styles.input_box}
-            onChangeText={(text) => setCity(text)}
+            onPress={(data, details = null) => {
+              // 'details' is provided when fetchDetails = true
+              console.log("triggers when user selected something from the dropdown of suggestions", data, details);
+              setCity(data.structured_formatting.main_text)
+              findWeatherData(data.structured_formatting.main_text)
+            }}
+            query={{
+              key: API_KEY,
+              language: 'en',
+            }}
+
           />
           <TouchableOpacity style={styles.search_btn}>
             <Icon name='search1' size={24} color='#fff'
-              /*onPress={() => {
+              onPress={() => {
                 findWeatherData(city);
-              }}*/ />
+                console.log(city)
+              }} />
           </TouchableOpacity>
         </View>
 
@@ -185,7 +159,7 @@ export default function App() {
         </View>
         <View style={styles.weather_box_week}>
           <View style={styles.weather_holder_week}>
-            {/*renderDayLines()*/}
+            {renderDayLines()}
           </View>
         </View>
       </ImageBackground>
@@ -199,20 +173,20 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   input_box_view: {
-    height: '20%',
-    width: '100%',
+    height: '18%',
+    width: '90%',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginTop: '10%',
+    marginLeft: '5%',
+    marginRight: '3%',
   },
   input_box: {
-    height: '35%',
+    height: '20%',
     width: '80%',
     borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 15,
     color: '#FFF',
-    paddingHorizontal: 15
   },
   search_btn: {
     marginLeft: '5%',
@@ -222,11 +196,11 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   weather_box_main: {
-    height: '30%',
+    height: 220,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   weather_holder_view: {
     height: '80%',
@@ -234,33 +208,33 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 15,
     alignItems: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   temperature_text: {
     fontSize: 50,
     color: '#FFF',
-    marginLeft: '5%'
+    marginLeft: '5%',
   },
   city_text: {
     fontSize: 30,
     color: '#FFF',
     marginLeft: '5%',
-    marginTop: '10%'
+    marginTop: '5%',
   },
   main_text: {
     fontSize: 20,
     color: '#FFF',
     marginLeft: '5%',
-    marginTop: '3%'
+    marginTop: '2%',
   },
   weather_box_week: {
-    height: '50%',
+    height: 355,
     width: '100%',
     justifyContent: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   weather_holder_week: {
-    height: '80%',
+    height: '88%',
     width: '90%',
     backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 15,
@@ -269,7 +243,6 @@ const styles = StyleSheet.create({
   weather_line_week: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: '2.3%'
   },
   weather_line_city: {
     width: 130
@@ -279,15 +252,15 @@ const styles = StyleSheet.create({
   },
   weather_line_temp: {
     width: 90,
-    marginRight: '3%',
+    marginRight: '5%',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   forecast_text: {
     fontSize: 20,
     color: '#FFF',
-    marginLeft: '6%',
-    marginTop: '3%'
+    marginLeft: '20%',
+    marginTop: '3%',
   },
   weather_Img: {
     height: 45,
