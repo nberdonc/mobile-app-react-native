@@ -1,4 +1,5 @@
 {
+  "homepage": "http://nberdonc.github.io/mobile-app-react-native",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -8,6 +9,8 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "axios": "^0.21.1",
     "expo": "~40.0.0",
@@ -24,7 +27,8 @@
     "react-native-web": "^0.15.0"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0"
+    "@babel/core": "~7.9.0",
+    "gh-pages": "^3.1.0"
   },
   "private": true
 }
