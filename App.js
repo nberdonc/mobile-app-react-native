@@ -7,6 +7,10 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 
 export default function App() {
 
+  const API_KEY = "AIzaSyDafc8vzGS609_owzrF2WNRLumYjiY4Gjg"
+  const WEATHER_API_KEY = "16909a97489bed275d13dbdea4e01f59"
+
+
   const [city, setCity] = useState('Barcelona')
   const [weekList, setWeekList] = useState([])
   const [location, setLocation] = useState({
@@ -52,7 +56,7 @@ export default function App() {
   ///GET LOCATION WEATHER DATA///
   console.log(location.userLat)
   let displayLocationWeather = (lat, lng) => {
-    let forecastByCoordUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lng}&cnt=7&appid=${process.env.WEATHER_API_KEY}`
+    let forecastByCoordUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lng}&cnt=7&appid=${WEATHER_API_KEY}`
     axios.get(forecastByCoordUrl)
       .then((res) => {
         console.log(res)
@@ -73,7 +77,7 @@ export default function App() {
 
   ///GET WEATHER DATA///
   let findWeatherData = (city) => {
-    let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&cnt=7&appid=${process.env.WEATHER_API_KEY}`
+    let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&cnt=7&appid=${WEATHER_API_KEY}`
     axios.get(forecastUrl)
       .then((res) => {
         console.log(res)
@@ -134,7 +138,7 @@ export default function App() {
               findWeatherData(data.structured_formatting.main_text)
             }}
             query={{
-              key: process.env.API_KEY,
+              key: API_KEY,
               language: 'en',
             }}
 
