@@ -119,11 +119,10 @@ export default function App() {
   }, [])
 
   return (
-    <>
+    <View style={styles.container}>
       <ImageBackground
-        source={{ uri: 'https://images.unsplash.com/photo-1602102245142-a0a02e7a6b05?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjAwfHxibHVlJTIwc2t5fGVufDB8MXwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }}
-        style={styles.Image_Background}
-      >
+        source={{ uri: 'https://images.unsplash.com/photo-1564324889062-df1710527dd9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTE3fHxza3l8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }}
+        style={styles.Image_Background}>
         <View style={styles.input_box_view}>
           <GooglePlacesAutocomplete
             placeholder='Search'
@@ -163,14 +162,16 @@ export default function App() {
           </View>
         </View>
       </ImageBackground>
-    </>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  container: {
+
+  },
   Image_Background: {
-    height: '100%',
-    width: '100%'
+    resizeMode: 'stretch'
   },
   input_box_view: {
     height: '18%',
@@ -178,12 +179,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    marginTop: '10%',
+    marginTop: '8%',
     marginLeft: '5%',
     marginRight: '3%',
   },
   input_box: {
-    height: '20%',
+    height: '12%',
     width: '80%',
     borderColor: 'gray',
     color: '#FFF',
@@ -212,18 +213,18 @@ const styles = StyleSheet.create({
   },
   temperature_text: {
     fontSize: 50,
-    color: '#FFF',
+    color: 'rgb(46, 45, 45)',
     marginLeft: '5%',
   },
   city_text: {
     fontSize: 30,
-    color: '#FFF',
+    color: 'rgb(46, 45, 45)',
     marginLeft: '5%',
     marginTop: '5%',
   },
   main_text: {
     fontSize: 20,
-    color: '#FFF',
+    color: 'rgb(46, 45, 45)',
     marginLeft: '5%',
     marginTop: '2%',
   },
@@ -258,7 +259,7 @@ const styles = StyleSheet.create({
   },
   forecast_text: {
     fontSize: 20,
-    color: '#FFF',
+    color: 'rgb(46, 45, 45)',
     marginLeft: '20%',
     marginTop: '3%',
   },
