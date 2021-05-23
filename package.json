@@ -8,7 +8,8 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "build": "expo build:web"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.14.1",
@@ -21,6 +22,7 @@
     "react-dom": "16.13.1",
     "react-moment": "^1.1.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
+    "react-native-dotenv": "^2.5.5",
     "react-native-google-autocomplete": "^0.2.0",
     "react-native-google-places-autocomplete": "^2.2.0",
     "react-native-location": "^2.5.0",
@@ -28,6 +30,7 @@
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "gh-pages": "^3.1.0"
   },
   "private": true

@@ -4,12 +4,10 @@ import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity } from
 import Icon from 'react-native-vector-icons/AntDesign'
 import 'moment-timezone';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { WEATHER_API_KEY, GOOGLE_API_KEY } from '@env'
+
 
 export default function App() {
-
-  const API_KEY = "AIzaSyDafc8vzGS609_owzrF2WNRLumYjiY4Gjg"
-  const WEATHER_API_KEY = "16909a97489bed275d13dbdea4e01f59"
-
 
   const [city, setCity] = useState('Barcelona')
   const [weekList, setWeekList] = useState([])
@@ -138,7 +136,7 @@ export default function App() {
               findWeatherData(data.structured_formatting.main_text)
             }}
             query={{
-              key: API_KEY,
+              key: GOOGLE_API_KEY,
               language: 'en',
             }}
 
