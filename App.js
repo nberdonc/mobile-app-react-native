@@ -4,7 +4,8 @@ import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity } from
 import Icon from 'react-native-vector-icons/AntDesign'
 import 'moment-timezone';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { WEATHER_API_KEY, GOOGLE_API_KEY } from '@env'
+import { WEATHER_API_KEY, GOOGLE_API_KEY } from '@env';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 export default function App() {
@@ -168,103 +169,99 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-
-  },
+    flex: 1,
+  }
+  ,
   Image_Background: {
-    resizeMode: 'stretch'
+    height: hp('100%'), // 70% of height device screen
+    width: wp('100%')   // 80% of width device screen
   },
   input_box_view: {
-    height: '18%',
-    width: '90%',
+    height: hp('10%'),
+    width: wp('90%'),
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    marginTop: '8%',
-    marginLeft: '5%',
-    marginRight: '3%',
+    marginTop: hp('8%'),
+    marginLeft: wp('5%'),
+    marginRight: wp('3%'),
   },
   input_box: {
-    height: '12%',
-    width: '80%',
     borderColor: 'gray',
     color: '#FFF',
   },
   search_btn: {
-    marginLeft: '5%',
-    height: '35%',
-    width: '8%',
+    marginLeft: wp('5%'),
+    height: hp('5%'),
+    width: wp('8%'),
     justifyContent: 'center',
     alignItems: 'center'
   },
   weather_box_main: {
-    height: 220,
-    width: '100%',
+    height: hp('23%'),
+    width: wp('100%'),
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
   },
   weather_holder_view: {
-    height: '80%',
-    width: '90%',
+    height: hp('18%'),
+    width: wp('90%'),
     backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 15,
     alignItems: 'center',
     flexDirection: 'column',
   },
   temperature_text: {
-    fontSize: 50,
+    fontSize: hp('4%'),
     color: 'rgb(46, 45, 45)',
-    marginLeft: '5%',
+    marginLeft: wp('5%'),
   },
   city_text: {
-    fontSize: 30,
+    fontSize: hp('4%'),
     color: 'rgb(46, 45, 45)',
-    marginLeft: '5%',
-    marginTop: '5%',
+    marginLeft: wp('5%'),
+    marginTop: hp('1%'),
   },
   main_text: {
-    fontSize: 20,
+    fontSize: hp('4%'),
     color: 'rgb(46, 45, 45)',
-    marginLeft: '5%',
-    marginTop: '2%',
+    marginLeft: wp('5%'),
   },
   weather_box_week: {
-    height: 355,
-    width: '100%',
     justifyContent: 'center',
     flexDirection: 'row',
   },
   weather_holder_week: {
-    height: '88%',
-    width: '90%',
+    height: hp('56%'),
+    width: wp('90%'),
     backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 15,
     flexDirection: 'column',
   },
   weather_line_week: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   weather_line_city: {
-    width: 130
+    width: wp('35%'),
   },
   weather_line_icon: {
-    width: 90
+    width: wp('25%'),
   },
   weather_line_temp: {
-    width: 90,
-    marginRight: '5%',
+    width: wp('25%'),
+    marginRight: wp('5%'),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   forecast_text: {
-    fontSize: 20,
     color: 'rgb(46, 45, 45)',
-    marginLeft: '20%',
-    marginTop: '3%',
+    marginLeft: wp('5%'),
+    marginTop: hp('3%'),
   },
   weather_Img: {
     height: 45,
     width: 45,
   }
 });
+
