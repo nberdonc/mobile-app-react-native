@@ -1,9 +1,10 @@
 {
   "background_color": "#ffffff",
+  "description": "",
   "display": "standalone",
   "lang": "en",
-  "name": "mobile-app",
-  "short_name": "mobile-app",
+  "name": "mobile-app-react-native.nb",
+  "short_name": "mobile-app-react-native.nb",
   "start_url": "/?utm_source=web_app_manifest",
   "orientation": "portrait",
   "icons": [
