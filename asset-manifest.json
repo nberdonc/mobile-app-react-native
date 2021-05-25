@@ -1,11 +1,11 @@
 {
   "files": {
-    "app.js": "/mobile-app-react-native/static/js/app.41e34917.chunk.js",
-    "app.js.map": "/mobile-app-react-native/static/js/app.41e34917.chunk.js.map",
+    "app.js": "/mobile-app-react-native/static/js/app.1980e931.chunk.js",
+    "app.js.map": "/mobile-app-react-native/static/js/app.1980e931.chunk.js.map",
     "runtime~app.js": "/mobile-app-react-native/static/js/runtime~app.4803b8f4.js",
     "runtime~app.js.map": "/mobile-app-react-native/static/js/runtime~app.4803b8f4.js.map",
-    "static/js/2.cf8d3aa1.chunk.js": "/mobile-app-react-native/static/js/2.cf8d3aa1.chunk.js",
-    "static/js/2.cf8d3aa1.chunk.js.map": "/mobile-app-react-native/static/js/2.cf8d3aa1.chunk.js.map",
+    "static/js/2.4cffe989.chunk.js": "/mobile-app-react-native/static/js/2.4cffe989.chunk.js",
+    "static/js/2.4cffe989.chunk.js.map": "/mobile-app-react-native/static/js/2.4cffe989.chunk.js.map",
     "fonts/AntDesign.ttf": "/mobile-app-react-native/./fonts/AntDesign.ttf",
     "favicon-16.png": "/mobile-app-react-native/favicon-16.png",
     "favicon-32.png": "/mobile-app-react-native/favicon-32.png",
@@ -13,12 +13,12 @@
     "index.html": "/mobile-app-react-native/index.html",
     "manifest.json": "/mobile-app-react-native/manifest.json",
     "serve.json": "/mobile-app-react-native/serve.json",
-    "static/js/2.cf8d3aa1.chunk.js.LICENSE.txt": "/mobile-app-react-native/static/js/2.cf8d3aa1.chunk.js.LICENSE.txt",
+    "static/js/2.4cffe989.chunk.js.LICENSE.txt": "/mobile-app-react-native/static/js/2.4cffe989.chunk.js.LICENSE.txt",
     "static/media/powered_by_google_on_white.png": "/mobile-app-react-native/static/media/powered_by_google_on_white.f241a554.png"
   },
   "entrypoints": [
     "static/js/runtime~app.4803b8f4.js",
-    "static/js/2.cf8d3aa1.chunk.js",
-    "static/js/app.41e34917.chunk.js"
+    "static/js/2.4cffe989.chunk.js",
+    "static/js/app.1980e931.chunk.js"
   ]
 }
