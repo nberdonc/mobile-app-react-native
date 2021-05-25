@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'
 import 'moment-timezone';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { WEATHER_API_KEY, GOOGLE_API_KEY } from '@env';
+import { WEATHER_API_KEY } from '@env';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
@@ -125,21 +124,11 @@ export default function App() {
         source={{ uri: 'https://images.unsplash.com/photo-1564324889062-df1710527dd9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTE3fHxza3l8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }}
         style={styles.Image_Background}>
         <View style={styles.input_box_view}>
-          <GooglePlacesAutocomplete
+          <TextInput
             placeholder='Search'
-            placeholderTextcolor='#fff'
+            placeholderTextcolor='#000'
             style={styles.input_box}
-            onPress={(data, details = null) => {
-              // 'details' is provided when fetchDetails = true
-              console.log("triggers when user selected something from the dropdown of suggestions", data, details);
-              setCity(data.structured_formatting.main_text)
-              findWeatherData(data.structured_formatting.main_text)
-            }}
-            query={{
-              key: GOOGLE_API_KEY,
-              language: 'en',
-            }}
-
+            onChangeText={text => setCity(text)}
           />
           <TouchableOpacity style={styles.search_btn}>
             <Icon name='search1' size={24} color='#fff'
@@ -173,11 +162,11 @@ const styles = StyleSheet.create({
   }
   ,
   Image_Background: {
-    height: hp('100%'), // 70% of height device screen
-    width: wp('100%')   // 80% of width device screen
+    height: hp('100%'),
+    width: wp('100%')
   },
   input_box_view: {
-    height: hp('10%'),
+    height: hp('5%'),
     width: wp('90%'),
     justifyContent: 'center',
     alignItems: 'center',
@@ -187,8 +176,12 @@ const styles = StyleSheet.create({
     marginRight: wp('3%'),
   },
   input_box: {
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 8,
+    padding: 10,
+    fontSize: hp('2.5%'),
+    width: wp('80%'),
     borderColor: 'gray',
-    color: '#FFF',
   },
   search_btn: {
     marginLeft: wp('5%'),
@@ -241,6 +234,7 @@ const styles = StyleSheet.create({
   },
   weather_line_week: {
     flexDirection: 'row',
+    marginTop: hp('0.5%'),
   },
   weather_line_city: {
     width: wp('35%'),
@@ -260,8 +254,9 @@ const styles = StyleSheet.create({
     marginTop: hp('3%'),
   },
   weather_Img: {
-    height: 45,
-    width: 45,
+    marginTop: hp('1.5%'),
+    height: wp('10%'),
+    width: hp('10%'),
   }
 });
 
