@@ -120,8 +120,6 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <title>nberdonc-weather-app</title>
-      <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"></link>
       <ImageBackground
         source={{ uri: 'https://images.unsplash.com/photo-1564324889062-df1710527dd9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTE3fHxza3l8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }}
         style={styles.Image_Background}>
